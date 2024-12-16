@@ -1,5 +1,5 @@
 from django.views.generic import ListView, DetailView
-from .models import BlogPost, Category, Tag
+from .models import BlogPost, Category, Tag, Expertise
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -45,12 +45,19 @@ class BlogListView(ListView):
 
 class BlogDetailView(DetailView):
     model = BlogPost
-    template_name = "core/blog_detail.html"
+    template_name = "single.html"
     context_object_name = "post"
 
     def get_object(self):
         slug = self.kwargs.get("slug")
         return get_object_or_404(BlogPost, slug=slug, published=True)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["posts"] = BlogPost.objects.filter(published=True).order_by(
+            "-created_at"
+        )[:2]
+        return context
 
 
 ## function based views
@@ -93,7 +100,13 @@ def blog_detail(request, slug):
 
 
 def home(request):
-    return render(request, "index.html")
+    expertise = Expertise.objects.all()
+    recent_posts = BlogPost.objects.filter(published=True).order_by("-created_at")[:4]
+    context = {
+        "expertise": expertise,
+        "posts": recent_posts,
+    }
+    return render(request, "index.html", context)
 
 
 def contact(request):

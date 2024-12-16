@@ -72,7 +72,7 @@ class BlogPost(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("blog:detail", args=[self.slug])
+        return reverse("blog:blog_detail", args=[self.slug])
 
     class Meta:
         ordering = ["-created_at"]
