@@ -1,0 +1,74 @@
+{% load static %}
+{% load tinymce_tags %}
+
+<!-- Initialize TinyMCE Editor -->
+{{ form.content|tinymce }}
+
+
+
+<div class="pagination">
+  <span class="step-links">
+    {% if blogs.has_previous %}
+      <a href="?page=1">&laquo; first</a>
+      <a href="?page={{ blogs.previous_page_number }}">previous</a>
+    {% endif %}
+
+    <span class="current">
+      Page {{ blogs.number }} of {{ blogs.paginator.num_pages }}.
+    </span>
+
+    {% if blogs.has_next %}
+      <a href="?page={{ blogs.next_page_number }}">next</a>
+      <a href="?page={{ blogs.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+  </span>
+</div>
+
+<h2>Blogs</h2>
+<ul>
+  {% for blog in blogs %}
+    <li>
+      <h3><a href="{{ blog.get_absolute_url }}">{{ blog.title }}</a></h3>
+      <p>{{ blog.content|truncatewords:30 }}</p>
+    </li>
+  {% endfor %}
+</ul>
+
+
+<form method="GET">
+  <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q }}">
+  <button type="submit">Search</button>
+</form>
+
+<ul>
+  {% for category in categories %}
+    <li><a href="?category={{ category.slug }}">{{ category.name }}</a></li>
+  {% endfor %}
+</ul>
+
+<h2>Categories</h2>
+<ul>
+  {% for category in categories %}
+    <li>
+      <a href="{% url 'blog:category' category.slug %}">
+        {{ category.name }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>
+
+
+<h2>{{ blog.title }}</h2>
+<p>Written by: {{ blog.author.authorprofile.bio }}</p>
+<img src="{{ blog.author.authorprofile.profile_picture.url }}" alt="{{ blog.author.username }}">
+<p>Published on: {{ blog.published_at }}</p>
+<p>{{ blog.content }}</p>
+
+
+from django.urls import reverse
+from django.http import HttpResponseRedirect
+
+def my_view(request):
+    # Your view logic here
+    return HttpResponseRedirect(reverse('blog:detail', args=[post.slug]))
+
