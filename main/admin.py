@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import BlogPost, Category, Tag, AuthorProfile
+from .models import BlogPost, Category, Tag, AuthorProfile, Gallery, Event
 
 # Register your models here.
 
@@ -16,3 +16,12 @@ admin.site.register(BlogPost, BlogPostAdmin)
 admin.site.register(Category)
 admin.site.register(Tag)
 admin.site.register(AuthorProfile)
+
+
+@admin.register(Gallery)
+class GalleryAdmin(admin.ModelAdmin):
+    list_display = ("event", "media_type", "created_at")
+    list_filter = ("media_type", "created_at")
+
+
+admin.site.register(Event)

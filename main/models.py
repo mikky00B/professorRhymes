@@ -84,3 +84,24 @@ class Expertise(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Gallery(models.Model):
+    title = models.CharField(max_length=255)
+    event = models.ForeignKey("Event", on_delete=models.CASCADE, null=True, blank=True)
+    media_type = models.CharField(
+        max_length=10, choices=[("image", "Image"), ("video", "Video")]
+    )
+    file = models.FileField(upload_to="gallery/")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Event(models.Model):
+    name = models.CharField(max_length=20)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

@@ -1,5 +1,5 @@
 from django.views.generic import ListView, DetailView
-from .models import BlogPost, Category, Tag, Expertise
+from .models import BlogPost, Category, Tag, Expertise, Gallery, Event
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -114,7 +114,11 @@ def contact(request):
 
 
 def portfolio(request):
-    return render(request, "service.html")
+    gallery_items = Gallery.objects.all()
+    events = Event.objects.all()
+    return render(
+        request, "services.html", {"gallery_items": gallery_items, "event": events}
+    )
 
 
 def about(request):
